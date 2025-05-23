@@ -7,7 +7,7 @@ const Hero = () => {
   const [isLoading, setIsLoading] = useState(true); // NOTE: Currently unused - potentially for future loading UI
   const [loadedVideos, setLoadedVideos] = useState(0); // Counts the number of videos that have loaded
 
-  const totalVideos = 4; // Total number of videos available
+  const totalVideos = 3; // Total number of videos available
 
   const nextVideoRef = useRef(null); // Ref for the next video element
 
@@ -16,10 +16,12 @@ const Hero = () => {
     setLoadedVideos((prevLoadedVideos) => prevLoadedVideos + 1);
   };
 
+  const upcomingVideoIndex = (currentIndex % totalVideos) + 1; // Calculates the index of the next video to be shown
+
   // handleMiniVideoPlayerClick - Advances to the next video on user interaction
   const handleMiniVideoPlayerClick = () => {
-    setHasClicked(true);
-    setCurrentIndex((prevIndex) => prevIndex + 1);
+    setHasClicked(true); // Updates the hasClicked state to true
+    setCurrentIndex(upcomingVideoIndex); // Updates the current video index to the next video
   };
 
   // getVideoSrc - Constructs the video source path based on index
