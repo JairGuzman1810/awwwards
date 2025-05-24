@@ -1,4 +1,6 @@
 import React, { useRef, useState } from "react";
+import { TiLocationArrow } from "react-icons/ti";
+import Button from "./Button";
 
 // Hero - Renders the main hero section with a masked video interface
 const Hero = () => {
@@ -72,7 +74,7 @@ const Hero = () => {
             src={getVideoSrc(
               currentIndex === totalVideos - 1 ? 1 : currentIndex
             )}
-            autoPlay
+            //autoPlay
             loop
             muted
             className="absolute left-0 top-0 size-full object-cover object-center"
@@ -97,9 +99,21 @@ const Hero = () => {
               <br />
               Unleash the Play Economy
             </p>
+
+            <Button
+              id="watch-trailer"
+              title="Watch Trailer"
+              leftIcon={<TiLocationArrow />}
+              containerClassName="bg-yellow-300 flex-center gap-1"
+            />
           </div>
         </div>
       </div>
+
+      {/* Duplicate bottom-right hero title for animation layering */}
+      <h1 className="special-font hero-heading absolute bottom-5 right-5 text-black">
+        G<b>a</b>ming
+      </h1>
     </div>
   );
 };
