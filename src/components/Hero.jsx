@@ -14,6 +14,7 @@ const Hero = () => {
   const totalVideos = 4; // Total number of videos available
 
   const nextVideoRef = useRef(null); // Ref for the next video element
+  const miniVideoPlayerContainerRef = useRef(null); // Ref for the circular masked hotspot container
 
   // handleVideoLoad - Increments the loaded video count when a video finishes loading
   const handleVideoLoad = () => {
@@ -58,6 +59,64 @@ const Hero = () => {
     { dependencies: [currentIndex], revertOnUpdate: true } // Re-run effect on currentIndex changes, revert animations if needed
   );
 
+  // Add 3D tilt interaction to mini video player container based on cursor position
+  useGSAP(
+    () => {
+      const miniPlayerContainer = miniVideoPlayerContainerRef.current; // Get the DOM element for the mini video player
+
+      if (!miniPlayerContainer) return; // Exit if the container is not yet mounted
+
+      // handleMouseMove - Applies 3D tilt transform based on cursor position
+      const handleMouseMove = (e) => {
+        const { left, top, width, height } =
+          miniPlayerContainer.getBoundingClientRect(); // Get position and size of the container
+
+        const centerX = left + width / 2; // X coordinate of container center
+        const centerY = top + height / 2; // Y coordinate of container center
+
+        const mouseX = e.clientX; // X coordinate of mouse
+        const mouseY = e.clientY; // Y coordinate of mouse
+
+        const percentX = (mouseX - centerX) / (width / 2); // Horizontal deviation from center, normalized (-1 to 1)
+        const percentY = (mouseY - centerY) / (height / 2); // Vertical deviation from center, normalized (-1 to 1)
+
+        const maxTilt = 10; // Maximum tilt angle in degrees for both axes
+
+        const tiltX = -percentY * maxTilt; // Calculate tilt around X-axis (vertical tilt)
+        const tiltY = percentX * maxTilt; // Calculate tilt around Y-axis (horizontal tilt)
+
+        // Animate container rotation with calculated tilt values
+        gsap.to(miniPlayerContainer, {
+          rotateX: tiltX, // Apply vertical tilt
+          rotateY: tiltY, // Apply horizontal tilt
+          duration: 0.3, // Short animation duration for responsive effect
+          ease: "power1.out", // Easing for smooth movement
+        });
+      };
+
+      // handleMouseLeave - Resets tilt when cursor leaves the container
+      const handleMouseLeave = () => {
+        gsap.to(miniPlayerContainer, {
+          rotateX: 0, // Reset vertical rotation
+          rotateY: 0, // Reset horizontal rotation
+          duration: 0.5, // Slightly longer duration for natural rebound
+          ease: "elastic.out(1, 0.3)", // Elastic easing for bouncy effect
+        });
+      };
+
+      // Attach event listeners for interactive tilt effect
+      miniPlayerContainer.addEventListener("mousemove", handleMouseMove);
+      miniPlayerContainer.addEventListener("mouseleave", handleMouseLeave);
+
+      // Cleanup - Remove event listeners on unmount to avoid memory leaks
+      return () => {
+        miniPlayerContainer.removeEventListener("mousemove", handleMouseMove);
+        miniPlayerContainer.removeEventListener("mouseleave", handleMouseLeave);
+      };
+    },
+    { dependencies: [] } // Only run once on component mount
+  );
+
   // getVideoSrc - Constructs the video source path based on index
   const getVideoSrc = (index) => `/videos/hero-${index}.mp4`;
 
@@ -71,7 +130,10 @@ const Hero = () => {
         {/* Video layering and interactive hotspot container */}
         <div>
           {/* Circular masked hotspot that reveals the next video on hover */}
-          <div className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg">
+          <div
+            ref={miniVideoPlayerContainerRef}
+            className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg"
+          >
             {/* Scales in and fades on hover to preview upcoming video */}
             <div
               onClick={handleMiniVideoPlayerClick}
