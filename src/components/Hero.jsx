@@ -29,21 +29,21 @@ const Hero = () => {
 
   return (
     <div className="relative h-dvh w-screen overflow-x-hidden">
-      {/* Fullscreen container with hidden overflow to frame the hero section */}
+      {/* Hero container with fullscreen height and horizontal overflow hidden */}
       <div
         id="video-frame"
         className="relative z-10 h-dvh w-screen overflow-hidden rounded-lg bg-blue-75"
       >
-        {/* Video frame with blue background and rounded corners */}
+        {/* Video layering and interactive hotspot container */}
         <div>
-          {/* Circular masked area that acts as an interactive hotspot */}
+          {/* Circular masked hotspot that reveals the next video on hover */}
           <div className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg">
-            {/* Hidden by default; scales and fades in on hover */}
+            {/* Scales in and fades on hover to preview upcoming video */}
             <div
               onClick={handleMiniVideoPlayerClick}
               className="origin-center scale-50 opacity-0 transition-all duration-500 ease-in hover:scale-100 hover:opacity-100"
             >
-              {/* Upcoming video shown on hover interaction */}
+              {/* Hover-preview video for the next sequence */}
               <video
                 ref={nextVideoRef}
                 src={getVideoSrc(upcomingVideoIndex)}
@@ -56,7 +56,7 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Invisible preload video element to prepare the next clip in advance */}
+          {/* Invisible preloaded video to smooth transitions */}
           <video
             ref={nextVideoRef}
             src={getVideoSrc(currentIndex)}
@@ -67,7 +67,7 @@ const Hero = () => {
             onLoadedData={handleVideoLoad}
           />
 
-          {/* Main background video player that plays the current video fullscreen */}
+          {/* Main background video playing fullscreen */}
           <video
             src={getVideoSrc(
               currentIndex === totalVideos - 1 ? 1 : currentIndex
@@ -80,17 +80,23 @@ const Hero = () => {
           />
         </div>
 
-        {/* Foreground "Gaming" headline at bottom right */}
+        {/* Bottom-right hero title */}
         <h1 className="special-font hero-heading absolute bottom-5 right-5 z-40 text-blue-75">
           G<b>a</b>ming
         </h1>
 
-        {/* Foreground "redefine" headline at top left */}
+        {/* Top-left subheading and tagline */}
         <div className="absolute left-0 top-0 z-40 size-full">
           <div className="mt-24 px-5 sm:px-10">
             <h1 className="special-font hero-heading text-blue-100">
               redefi<b>n</b>e
             </h1>
+
+            <p className="mb-5 max-w-64 font-robert-regular text-blue-100">
+              Enter the Metagame Layer
+              <br />
+              Unleash the Play Economy
+            </p>
           </div>
         </div>
       </div>

@@ -6,9 +6,9 @@
 @theme {
   --font-zentry: zentry, sanf-serif;
   --font-general: general, sanf-serif;
-  --font-circularweb: circular-web, sanf-serif;
-  --font-robertmedium: robert-medium, sanf-serif;
-  --font-robertregular: robert-regular, sanf-serif;
+  --font-circular-web: circular-web, sanf-serif;
+  --font-robert-medium: robert-medium, sanf-serif;
+  --font-robert-regular: robert-regular, sanf-serif;
 
   --color-blue-50: #dfdff0;
   --color-blue-75: #dfdff2;
@@ -117,7 +117,7 @@ b {
    SECTION-SPECIFIC UTILITIES
 ======================================== */
 @utility about-subtext {
-  @apply absolute bottom-[-100dvh] sm:bottom-[-70dvh] md:bottom-[-80dvh] left-1/2 w-full max-w-96 -translate-x-1/2 text-center font-circularweb text-lg md:max-w-[34rem];
+  @apply absolute bottom-[-100dvh] sm:bottom-[-70dvh] md:bottom-[-80dvh] left-1/2 w-full max-w-96 -translate-x-1/2 text-center font-circular-web text-lg md:max-w-[34rem];
 }
 
 @utility about-image {
