@@ -1,3 +1,5 @@
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import React, { useRef, useState } from "react";
 import { TiLocationArrow } from "react-icons/ti";
 import Button from "./Button";
@@ -9,7 +11,7 @@ const Hero = () => {
   const [isLoading, setIsLoading] = useState(true); // NOTE: Currently unused - potentially for future loading UI
   const [loadedVideos, setLoadedVideos] = useState(0); // Counts the number of videos that have loaded
 
-  const totalVideos = 3; // Total number of videos available
+  const totalVideos = 4; // Total number of videos available
 
   const nextVideoRef = useRef(null); // Ref for the next video element
 
@@ -25,6 +27,36 @@ const Hero = () => {
     setHasClicked(true); // Updates the hasClicked state to true
     setCurrentIndex(upcomingVideoIndex); // Updates the current video index to the next video
   };
+
+  // Animates the hero section when the user clicks on the mini video player
+  useGSAP(
+    () => {
+      if (hasClicked) {
+        // Set the next video element's visibility to visible before animation starts
+        gsap.set("#next-video", { visibility: "visible" });
+
+        // Animate the next video element to fullscreen scale and size
+        gsap.to("#next-video", {
+          transformOrigin: "center center", // Set transform origin to center for smooth scaling
+          scale: 1, // Scale video to full size
+          width: "100%", // Set width to fill container
+          height: "100%", // Set height to fill container
+          duration: 1, // Animation duration of 1 second
+          ease: "power1.inOut", // Ease-in-out timing function for smooth animation
+          onStart: () => nextVideoRef.current.play(), // Play the next video when animation starts
+        });
+
+        // Animate the current preview video shrinking out of view
+        gsap.from("#current-video", {
+          transformOrigin: "center center", // Set transform origin to center for smooth scaling
+          scale: 0, // Animate scale from 0 (shrinking effect)
+          duration: 1.5, // Animation duration of 1.5 seconds
+          ease: "power1.inOut", // Ease-in-out timing function for smooth animation
+        });
+      }
+    },
+    { dependencies: [currentIndex], revertOnUpdate: true } // Re-run effect on currentIndex changes, revert animations if needed
+  );
 
   // getVideoSrc - Constructs the video source path based on index
   const getVideoSrc = (index) => `/videos/hero-${index}.mp4`;
@@ -72,9 +104,9 @@ const Hero = () => {
           {/* Main background video playing fullscreen */}
           <video
             src={getVideoSrc(
-              currentIndex === totalVideos - 1 ? 1 : currentIndex
+              currentIndex === totalVideos - 1 ? 1 : currentIndex + 1
             )}
-            //autoPlay
+            // autoPlay
             loop
             muted
             className="absolute left-0 top-0 size-full object-cover object-center"
