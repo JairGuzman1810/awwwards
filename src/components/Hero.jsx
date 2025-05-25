@@ -58,6 +58,28 @@ const Hero = () => {
     { dependencies: [currentIndex], revertOnUpdate: true } // Re-run effect on currentIndex changes, revert animations if needed
   );
 
+  // Animates the hero section when the user scrolls
+  useGSAP(() => {
+    // Set the initial clip path and border radius for the video frame
+    gsap.set("#video-frame", {
+      clipPath: "polygon(14% 0, 72% 0, 88% 90%, 0 95%)", // Initial clip path
+      borderRadius: "0% 0% 40% 10%", // Initial border radius
+    });
+
+    // Animate the video frame to a full-screen clip path and no border radius
+    gsap.from("#video-frame", {
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", // Full-screen clip path
+      borderRadius: "0% 0% 0% 0%", // No border radius
+      ease: "power1.inOut", // Smooth easing
+      scrollTrigger: {
+        trigger: "#video-frame", // Trigger element
+        start: "center center", // Start position
+        end: "bottom center", // End position
+        scrub: true, // Enable scrubbing
+      },
+    });
+  });
+
   // getVideoSrc - Constructs the video source path based on index
   const getVideoSrc = (index) => `/videos/hero-${index}.mp4`;
 
