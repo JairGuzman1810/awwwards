@@ -1,8 +1,11 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import React, { useRef, useState } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useEffect, useRef, useState } from "react";
 import { TiLocationArrow } from "react-icons/ti";
 import Button from "./Button";
+
+gsap.registerPlugin(ScrollTrigger); // Registers the ScrollTrigger plugin
 
 // Hero - Renders the main hero section with a masked video interface
 const Hero = () => {
@@ -11,7 +14,7 @@ const Hero = () => {
   const [isLoading, setIsLoading] = useState(true); // NOTE: Currently unused - potentially for future loading UI
   const [loadedVideos, setLoadedVideos] = useState(0); // Counts the number of videos that have loaded
 
-  const totalVideos = 4; // Total number of videos available
+  const totalVideos = 3; // Total number of videos available
 
   const nextVideoRef = useRef(null); // Ref for the next video element
 
@@ -27,6 +30,14 @@ const Hero = () => {
     setHasClicked(true); // Updates the hasClicked state to true
     setCurrentIndex(upcomingVideoIndex); // Updates the current video index to the next video
   };
+
+  // Handles the loading state of the hero section
+  useEffect(() => {
+    // Checks if all videos have loaded
+    if (loadedVideos === totalVideos - 1) {
+      setIsLoading(false); // Sets the loading state to false
+    }
+  }, [loadedVideos]);
 
   // Animates the hero section when the user clicks on the mini video player
   useGSAP(
@@ -85,6 +96,17 @@ const Hero = () => {
 
   return (
     <div className="relative h-dvh w-screen overflow-x-hidden">
+      {/* Loading screen */}
+      {isLoading && (
+        <div className="flex-center absolute z-[100] h-dvh w-screen overflow-hidden bg-violet-50">
+          <div className="three-body">
+            <div className="three-body__dot"></div>
+            <div className="three-body__dot"></div>
+            <div className="three-body__dot"></div>
+          </div>
+        </div>
+      )}
+
       {/* Hero container with fullscreen height and horizontal overflow hidden */}
       <div
         id="video-frame"
