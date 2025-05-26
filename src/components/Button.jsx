@@ -1,5 +1,12 @@
-// Button - Renders a styled button with optional left icon, ID, and custom layout classes
-const Button = ({ id, title, leftIcon, containerClassName, onClick }) => {
+// Button - Renders a styled button with optional left icon, right icon, ID, and custom layout classes
+const Button = ({
+  id,
+  title,
+  leftIcon,
+  rightIcon,
+  containerClassName,
+  onClick,
+}) => {
   return (
     // Button element with dynamic styling and click handler
     <button
@@ -14,6 +21,9 @@ const Button = ({ id, title, leftIcon, containerClassName, onClick }) => {
         {/* Button label text */}
         <div>{title}</div>
       </span>
+
+      {/* Optional icon displayed to the right of the text */}
+      {rightIcon}
     </button>
   );
 };
