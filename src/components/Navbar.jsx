@@ -1,13 +1,36 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TiLocationArrow } from "react-icons/ti";
 import Button from "./Button";
 
 // List of navigation links
 const navItems = ["Nexus", "Vault", "Prologue", "About", "Contact"];
 
-// Navbar - Fixed top navigation bar with logo, product button, and section links
+// Navbar - Fixed top navigation bar with logo, product button, nav links, and audio toggle
 const Navbar = () => {
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false); // State to track if audio is playing
+  const [isIndicatorActive, setIsIndicatorActive] = useState(false); // State to toggle animation bars
+
   const navContainerRef = useRef(null); // Ref for the navbar container
+  const audioElementRef = useRef(null); // Ref for the audio element
+
+  // toggleAudioIndicator - Toggle audio playback and indicator animation
+  const toggleAudioIndicator = () => {
+    setIsAudioPlaying((prev) => !prev); // Toggle audio playback
+    setIsIndicatorActive((prev) => !prev); // Toggle animation bars
+  };
+
+  // Play or pause audio depending on state
+  useEffect(() => {
+    // If the audio is marked as playing
+    if (isAudioPlaying) {
+      // Attempt to play the audio using the ref (safe optional chaining)
+      audioElementRef.current?.play();
+    } else {
+      // Otherwise, pause the audio if it exists
+      audioElementRef.current?.pause();
+    }
+    // Only run this effect when the `isAudioPlaying` state changes
+  }, [isAudioPlaying]);
 
   return (
     // Fixed navbar container at the top of the screen
@@ -26,28 +49,50 @@ const Navbar = () => {
             {/* CTA button to view product options */}
             <Button
               id="product-button"
-              title={"Products"}
+              title="Products"
               rightIcon={<TiLocationArrow />}
-              containerClassName={
-                "bg-blue-50 md:flex hidden items-center justify-center gap-1"
-              }
+              containerClassName="bg-blue-50 md:flex hidden items-center justify-center gap-1"
             />
           </div>
 
-          {/* Right section: navigation links (desktop only) */}
+          {/* Right section: navigation links and audio indicator */}
           <div className="flex h-full items-center">
+            {/* Desktop nav links */}
             <div className="hidden md:block">
               {/* Anchor links to different page sections */}
               {navItems.map((item) => (
                 <a
                   key={item}
-                  href={`#${item.toLowerCase()}`} // Anchor link to the section
+                  href={`#${item.toLowerCase()}`} // Anchor to specific section
                   className="nav-hover-btn"
                 >
                   {item}
                 </a>
               ))}
             </div>
+
+            {/* Audio visualizer toggle button */}
+            <button
+              className="ml-10 flex items-center space-x-0.5 cursor-pointer"
+              onClick={toggleAudioIndicator}
+            >
+              {/* Hidden looping audio file */}
+              <audio
+                className="hidden"
+                ref={audioElementRef}
+                src="/audio/loop.mp3"
+                loop
+              />
+
+              {/* Animated audio bars */}
+              {[1, 2, 3, 4].map((bar) => (
+                <div
+                  key={bar}
+                  className={`indicator-line ${isIndicatorActive && "active"}`}
+                  style={{ animationDelay: `${bar * 0.1}s` }}
+                />
+              ))}
+            </button>
           </div>
         </nav>
       </header>
