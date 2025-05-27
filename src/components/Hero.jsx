@@ -15,6 +15,13 @@ const Hero = () => {
   const [loadedVideos, setLoadedVideos] = useState(0); // Counts the number of videos that have loaded
 
   const totalVideos = 4; // Total number of videos available
+  // Titles for the hero section
+  const titles = [
+    { text: "Gaming", bold: "a" }, // First title with bold "a"
+    { text: "Identity", bold: "n" }, // Second title with bold "n"
+    { text: "Reality", bold: "a" }, // Third title with bold "a"
+    { text: "Agentic ai", bold: "e" }, // Fourth title with bold "e"
+  ];
 
   const nextVideoRef = useRef(null); // Ref for the next video element
   const miniVideoPlayerContainerRef = useRef(null); // Ref for the circular masked hotspot container
@@ -255,7 +262,7 @@ const Hero = () => {
           {/* Main background video playing fullscreen */}
           <video
             src={getVideoSrc(
-              currentIndex === totalVideos - 1 ? 1 : currentIndex + 1
+              currentIndex === totalVideos - 1 ? 1 : currentIndex
             )}
             // autoPlay
             loop
@@ -267,7 +274,14 @@ const Hero = () => {
 
         {/* Bottom-right hero title */}
         <h1 className="special-font hero-heading absolute bottom-5 right-5 z-40 text-blue-75">
-          G<b>a</b>ming
+          {titles[currentIndex - 1].text
+            .split(titles[currentIndex - 1].bold)
+            .map((part, i, arr) => (
+              <>
+                {part}
+                {i < arr.length - 1 && <b>{titles[currentIndex - 1].bold}</b>}
+              </>
+            ))}
         </h1>
 
         {/* Top-left subheading and tagline */}
@@ -295,7 +309,14 @@ const Hero = () => {
 
       {/* Duplicate bottom-right hero title for animation layering */}
       <h1 className="special-font hero-heading absolute bottom-5 right-5 text-black">
-        G<b>a</b>ming
+        {titles[currentIndex - 1].text
+          .split(titles[currentIndex - 1].bold)
+          .map((part, i, arr) => (
+            <>
+              {part}
+              {i < arr.length - 1 && <b>{titles[currentIndex - 1].bold}</b>}
+            </>
+          ))}
       </h1>
     </div>
   );
