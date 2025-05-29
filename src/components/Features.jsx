@@ -1,4 +1,51 @@
+import { useRef, useState } from "react";
 import { TiLocationArrow } from "react-icons/ti";
+
+// BentoTilt - Adds interactive 3D tilt effect to its children on mouse movement
+const BentoTilt = ({ children, className = "" }) => {
+  const [transformStyle, setTransformStyle] = useState(""); // Holds the current 3D transform style
+  const itemRef = useRef(null); // Ref to the DOM element for calculating mouse position
+
+  // handleMouseMove - Handles mouse movement over the element to apply a tilt transform
+  const handleMouseMove = (e) => {
+    if (!itemRef.current) return; // If the element is not found, return
+
+    // Get dimensions and position of the element
+    const { left, top, width, height } =
+      itemRef.current.getBoundingClientRect();
+
+    // Calculate mouse position relative to element bounds
+    const relativeX = (e.clientX - left) / width;
+    const relativeY = (e.clientY - top) / height;
+
+    // Calculate tilt based on mouse position (subtle tilt effect)
+    const tiltX = (relativeY - 0.5) * 5;
+    const tiltY = (relativeX - 0.5) * -5;
+
+    // Construct CSS transform string with perspective and scale
+    const newTransform = `perspective(700px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(.95, .95, .95)`;
+
+    // Update the transform style
+    setTransformStyle(newTransform);
+  };
+
+  // handleMouseLeave - Resets transform when the mouse leaves the element
+  const handleMouseLeave = () => {
+    setTransformStyle("");
+  };
+
+  return (
+    <div
+      ref={itemRef} // Reference to this DOM node
+      className={className}
+      style={{ transform: transformStyle }} // Apply dynamic transform
+      onMouseMove={handleMouseMove} // Track mouse movement for tilt
+      onMouseLeave={handleMouseLeave} // Reset transform on mouse leave
+    >
+      {children}
+    </div>
+  );
+};
 
 // BentoCard - Displays a video background card with title and optional description
 const BentoCard = ({ src, title, description }) => {
@@ -48,7 +95,7 @@ const Features = () => {
         </div>
 
         {/* Primary feature card with larger layout */}
-        <div className="border-hsla relative mb-7 h-96 w-full overflow-hidden rounded-md md:h-[65vh]">
+        <BentoTilt className="border-hsla relative mb-7 h-96 w-full overflow-hidden rounded-md md:h-[65vh]">
           <BentoCard
             src="videos/feature-1.mp4"
             title={
@@ -58,12 +105,12 @@ const Features = () => {
             }
             description="A cross-platform metagame app, turning your activities across Web2 and Web3 games into a rewarding adventure."
           />
-        </div>
+        </BentoTilt>
 
         {/* Grid layout containing smaller feature cards */}
         <div className="grid h-[135vh] w-full grid-cols-2 grid-rows-3 gap-7">
           {/* Card that spans two rows vertically on larger screens */}
-          <div className="bento-tilt_1 row-span-1 md:col-span-1 md:row-span-2">
+          <BentoTilt className="bento-tilt_1 row-span-1 md:col-span-1 md:row-span-2">
             <BentoCard
               src="videos/feature-2.mp4"
               title={
@@ -73,10 +120,10 @@ const Features = () => {
               }
               description="An anime and gaming-inspired NFT collection - the IP primed for expansion."
             />
-          </div>
+          </BentoTilt>
 
           {/* Horizontally shifted card on small screens */}
-          <div className="bento-tilt_1 row-span-1 ms-32 md:col-span-1 md:ms-0">
+          <BentoTilt className="bento-tilt_1 row-span-1 ms-32 md:col-span-1 md:ms-0">
             <BentoCard
               src="videos/feature-3.mp4"
               title={
@@ -86,10 +133,10 @@ const Features = () => {
               }
               description="A gamified social hub, adding a new dimension of play to social interaction for Web3 communities."
             />
-          </div>
+          </BentoTilt>
 
           {/* Horizontally shifted in opposite direction on small screens */}
-          <div className="bento-tilt_1 me-14 md:col-span-1 md:me-0">
+          <BentoTilt className="bento-tilt_1 me-14 md:col-span-1 md:me-0">
             <BentoCard
               src="videos/feature-4.mp4"
               title={
@@ -99,10 +146,10 @@ const Features = () => {
               }
               description="A cross-world AI Agent - elevating your gameplay to be more fun and productive."
             />
-          </div>
+          </BentoTilt>
 
           {/* Placeholder card with coming soon message */}
-          <div className="bento-tilt_2">
+          <BentoTilt className="bento-tilt_2">
             <div className="flex size-full flex-col justify-between bg-violet-300 p-5">
               <h1 className="bento-title special-font max-w-64 text-black">
                 M<b>o</b>re co<b>m</b>ing s<b>o</b>on.
@@ -111,10 +158,10 @@ const Features = () => {
               {/* Large arrow icon in bottom-right */}
               <TiLocationArrow className="m-5 scale-[5] self-end" />
             </div>
-          </div>
+          </BentoTilt>
 
           {/* Looping teaser video with no overlay */}
-          <div className="bento-tilt_2">
+          <BentoTilt className="bento-tilt_2">
             <video
               src="videos/feature-5.mp4"
               autoPlay
@@ -122,7 +169,7 @@ const Features = () => {
               loop
               className="size-full object-cover object-center"
             />
-          </div>
+          </BentoTilt>
         </div>
       </div>
     </section>
