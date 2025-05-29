@@ -27,11 +27,11 @@ const BentoCard = ({ src, title, description }) => {
   );
 };
 
-// Features - Section highlighting immersive product experience using a Bento-style card layout
+// Features - Main section showcasing Bento-style cards for featured metagame products
 const Features = () => {
   return (
     <section className="bg-black pb-52">
-      <div className="container mx-auto px-3 md:px-10">
+      <div className="container mx-auto px-4 md:px-10">
         {/* Intro paragraph */}
         <div className="px-5 py-32">
           <p className="font-circular-web text-lg text-blue-50">
@@ -45,8 +45,8 @@ const Features = () => {
           </p>
         </div>
 
-        {/* Featured Bento card (currently a single feature) */}
-        <div className="border-hsla relative mb-7 h-96 w*full overflow-hidden rounded-md md:h-[65vh]">
+        {/* Hero feature card (prominent) */}
+        <div className="border-hsla relative mb-7 h-96 w-full overflow-hidden rounded-md md:h-[65vh]">
           <BentoCard
             src="videos/feature-1.mp4"
             title={
@@ -58,7 +58,34 @@ const Features = () => {
           />
         </div>
 
-        {/* TODO: Add more BentoCard components for additional features */}
+        {/* Grid layout for additional feature cards */}
+        <div className="grid h-[135vh] w-full grid-cols-2 grid-rows-3 gap-7">
+          {/* Zigma card - spans 2 rows on desktop */}
+          <div className="bento-tilt_1 row-span-1 md:col-span-1 md:row-span-2">
+            <BentoCard
+              src="videos/feature-2.mp4"
+              title={
+                <>
+                  zig<b>m</b>a
+                </>
+              }
+              description="An anime and gaming-inspired NFT collection - the IP primed for expansion."
+            />
+          </div>
+
+          {/* Nexus card - shifted horizontally on small screens */}
+          <div className="bento-tilt_1 row-span-1 ms-32 md:col-span-1 md:ms-0">
+            <BentoCard
+              src="videos/feature-3.mp4"
+              title={
+                <>
+                  n<b>e</b>xus
+                </>
+              }
+              description="A gamified social hub, adding a new dimension of play to social interaction for Web3 communities."
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
