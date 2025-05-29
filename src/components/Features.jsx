@@ -49,6 +49,30 @@ const BentoTilt = ({ children, className = "" }) => {
 
 // BentoCard - Displays a video background card with title and optional description
 const BentoCard = ({ src, title, description }) => {
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 }); // Tracks mouse position relative to hover button
+  const [hoverOpacity, setHoverOpacity] = useState(0); // Controls opacity of the radial hover effect
+  const hoverButtonRef = useRef(null); // Ref to the hover button element
+
+  // handleMouseMove - Updates cursor position relative to the button for radial gradient
+  const handleMouseMove = (e) => {
+    if (!hoverButtonRef.current) return; // If the button is not found, return
+
+    // Get the bounding rectangle of the button
+    const rect = hoverButtonRef.current.getBoundingClientRect();
+
+    // Update the cursor position relative to the button
+    setCursorPosition({
+      x: e.clientX - rect.left, // Calculate x-coordinate relative to button
+      y: e.clientY - rect.top, // Calculate y-coordinate relative to button
+    });
+  };
+
+  // handleMouseEnter - Makes the radial gradient visible on hover
+  const handleMouseEnter = () => setHoverOpacity(1);
+
+  // handleMouseLeave - Hides the radial gradient when mouse leaves the button
+  const handleMouseLeave = () => setHoverOpacity(0);
+
   return (
     <div className="relative size-full">
       {/* Background video that fills the entire card */}
@@ -62,7 +86,7 @@ const BentoCard = ({ src, title, description }) => {
       />
 
       {/* Foreground content (title and description) over the video */}
-      <div className="relative z-10 size-full flex-col justify-between p-5 text-blue-50">
+      <div className="relative z-10 flex size-full flex-col justify-between p-5 text-blue-50">
         <div>
           <h1 className="bento-title special-font">{title}</h1>
 
@@ -70,6 +94,28 @@ const BentoCard = ({ src, title, description }) => {
           {description && (
             <p className="mt-3 max-w-64 text-xs md:text-base">{description}</p>
           )}
+        </div>
+
+        {/* Hoverable button with radial light effect */}
+        <div
+          ref={hoverButtonRef}
+          onMouseMove={handleMouseMove}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="border-hsla relative flex w-fit cursor-pointer items-center gap-1 overflow-hidden rounded-full bg-black px-5 py-2 text-xs uppercase text-white/20"
+        >
+          {/* Radial gradient follows cursor on hover */}
+          <div
+            className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
+            style={{
+              opacity: hoverOpacity,
+              background: `radial-gradient(100px circle at ${cursorPosition.x}px ${cursorPosition.y}px, #656fe288, #00000026)`,
+            }}
+          />
+
+          {/* Icon and label above the gradient */}
+          <TiLocationArrow className="relative z-20" />
+          <p className="relative z-20">coming soon</p>
         </div>
       </div>
     </div>
