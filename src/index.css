@@ -1,3 +1,4 @@
+@import url("https://fonts.cdnfonts.com/css/general-sans");
 @import "tailwindcss";
 
 /* ========================================
@@ -84,7 +85,7 @@ b {
 }
 
 @utility bento-title {
-  @apply uppercase md:text-6xl text-4xl font-black font-zentry;
+  @apply uppercase md:text-6xl text-4xl font-black;
 }
 
 @utility animated-title {

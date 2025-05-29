@@ -1,4 +1,5 @@
 import About from "./components/About";
+import Features from "./components/Features";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 
@@ -14,6 +15,9 @@ const App = () => {
 
       {/* Renders the About section */}
       <About />
+
+      {/* Renders the Features section */}
+      <Features />
     </main>
   );
 };
