@@ -2,6 +2,7 @@ import About from "./components/About";
 import Features from "./components/Features";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
+import Story from "./components/Story";
 
 // App - Root component that renders the main page layout and hero section
 const App = () => {
@@ -10,14 +11,17 @@ const App = () => {
       {/* Renders the Navbar */}
       <Navbar />
 
-      {/* Renders the Hero section */}
+      {/* Renders the Hero */}
       <Hero />
 
-      {/* Renders the About section */}
+      {/* Renders the About */}
       <About />
 
       {/* Renders the Features section */}
       <Features />
+
+      {/* Renders the Story section */}
+      <Story />
     </main>
   );
 };
