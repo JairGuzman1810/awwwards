@@ -1,5 +1,7 @@
+import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
 import { TiLocationArrow } from "react-icons/ti";
+import { useWindowScroll } from "react-use";
 import Button from "./Button";
 
 // List of navigation links
@@ -9,9 +11,40 @@ const navItems = ["Nexus", "Vault", "Prologue", "About", "Contact"];
 const Navbar = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false); // State to track if audio is playing
   const [isIndicatorActive, setIsIndicatorActive] = useState(false); // State to toggle animation bars
+  const [lastScrollY, setLastScrollY] = useState(0); // State to track the last scroll position
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true); // State to track if the navbar is visible
 
   const navContainerRef = useRef(null); // Ref for the navbar container
   const audioElementRef = useRef(null); // Ref for the audio element
+
+  const { y: currentScrollY } = useWindowScroll(); // Get current scroll position
+
+  // Handle navbar visibility based on scroll direction
+  useEffect(() => {
+    // Show or hide navbar based on scroll direction
+    if (currentScrollY === 0) {
+      setIsNavbarVisible(true); // Always show on top of page
+      navContainerRef.current.classList.remove("floating-nav"); // Remove float class
+    } else if (currentScrollY > lastScrollY) {
+      setIsNavbarVisible(false); // Hide when scrolling down
+      navContainerRef.current.classList.add("floating-nav"); // Add float class
+    } else if (currentScrollY < lastScrollY) {
+      setIsNavbarVisible(true); // Show when scrolling up
+      navContainerRef.current.classList.add("floating-nav"); // Ensure float class is present
+    }
+
+    setLastScrollY(currentScrollY); // Update last scroll position
+  }, [currentScrollY, lastScrollY]); // Run on scroll
+
+  // Animate navbar based on visibility
+  useEffect(() => {
+    // Animate navbar appearance using GSAP
+    gsap.to(navContainerRef.current, {
+      y: isNavbarVisible ? 0 : -100, // Slide in or out vertically
+      opacity: isNavbarVisible ? 1 : 0, // Fade in or out
+      duration: 0.2, // Transition speed
+    });
+  }, [isNavbarVisible]); // Run when visibility changes
 
   // toggleAudioIndicator - Toggle audio playback and indicator animation
   const toggleAudioIndicator = () => {
