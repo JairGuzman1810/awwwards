@@ -277,10 +277,10 @@ const Hero = () => {
           {titles[currentIndex - 1].text
             .split(titles[currentIndex - 1].bold)
             .map((part, i, arr) => (
-              <>
+              <span key={`${currentIndex}-${i}`}>
                 {part}
                 {i < arr.length - 1 && <b>{titles[currentIndex - 1].bold}</b>}
-              </>
+              </span>
             ))}
         </h1>
 
@@ -312,10 +312,10 @@ const Hero = () => {
         {titles[currentIndex - 1].text
           .split(titles[currentIndex - 1].bold)
           .map((part, i, arr) => (
-            <>
+            <span key={`${currentIndex}-${i}-duplicate`}>
               {part}
               {i < arr.length - 1 && <b>{titles[currentIndex - 1].bold}</b>}
-            </>
+            </span>
           ))}
       </h1>
     </div>
