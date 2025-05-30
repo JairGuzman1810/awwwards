@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
 import { TiLocationArrow } from "react-icons/ti";
 import Button from "./Button";
+import VideoPreview from "./VideoPreview";
 
 gsap.registerPlugin(ScrollTrigger); // Registers the ScrollTrigger plugin
 
@@ -24,7 +25,6 @@ const Hero = () => {
   ];
 
   const nextVideoRef = useRef(null); // Ref for the next video element
-  const miniVideoPlayerContainerRef = useRef(null); // Ref for the circular masked hotspot container
 
   // handleVideoLoad - Increments the loaded video count when a video finishes loading
   const handleVideoLoad = () => {
@@ -99,105 +99,6 @@ const Hero = () => {
     });
   });
 
-  // Enhanced 3D tilt interaction with wobble zoom effect for mini video player
-  useGSAP(
-    () => {
-      const miniPlayerContainer = miniVideoPlayerContainerRef.current; // Get the DOM element for the mini video player
-
-      if (!miniPlayerContainer) return; // Exit if the container is not yet mounted
-
-      let wobbleTimeline; // Store wobble animation timeline
-
-      // handleMouseMove - Applies dramatic 3D tilt transform based on cursor position
-      const handleMouseMove = (e) => {
-        const { left, top, width, height } =
-          miniPlayerContainer.getBoundingClientRect(); // Get position and size of the container
-
-        const centerX = left + width / 2; // X coordinate of container center
-        const centerY = top + height / 2; // Y coordinate of container center
-
-        const mouseX = e.clientX; // X coordinate of mouse
-        const mouseY = e.clientY; // Y coordinate of mouse
-
-        const percentX = (mouseX - centerX) / (width / 2); // Horizontal deviation from center, normalized (-1 to 1)
-        const percentY = (mouseY - centerY) / (height / 2); // Vertical deviation from center, normalized (-1 to 1)
-
-        const maxTilt = 25; // Increased maximum tilt angle for more dramatic effect
-
-        const tiltX = -percentY * maxTilt; // Calculate tilt around X-axis (vertical tilt)
-        const tiltY = percentX * maxTilt; // Calculate tilt around Y-axis (horizontal tilt)
-
-        // Animate container rotation with calculated tilt values
-        gsap.to(miniPlayerContainer, {
-          rotateX: tiltX, // Apply vertical tilt
-          rotateY: tiltY, // Apply horizontal tilt
-          duration: 0.3, // Short animation duration for responsive effect
-          ease: "power1.out", // Easing for smooth movement
-        });
-      };
-
-      // handleMouseEnter - Start wobble effect when mouse enters
-      const handleMouseEnter = () => {
-        // Kill any existing wobble animation
-        if (wobbleTimeline) wobbleTimeline.kill();
-
-        // Create wobble timeline with zoom in/out effect
-        wobbleTimeline = gsap.timeline({ repeat: -1 });
-
-        wobbleTimeline
-          .to(miniPlayerContainer, {
-            scale: 1.15, // Zoom in
-            duration: 0.8,
-            ease: "power2.inOut",
-          })
-          .to(miniPlayerContainer, {
-            scale: 0.95, // Zoom out (slightly smaller than original)
-            duration: 0.8,
-            ease: "power2.inOut",
-          })
-          .to(miniPlayerContainer, {
-            scale: 1.1, // Zoom in again (slightly less than first)
-            duration: 0.6,
-            ease: "power2.inOut",
-          })
-          .to(miniPlayerContainer, {
-            scale: 1, // Back to original size
-            duration: 0.6,
-            ease: "power2.inOut",
-          });
-      };
-
-      // handleMouseLeave - Reset tilt and stop wobble when cursor leaves the container
-      const handleMouseLeave = () => {
-        // Kill wobble animation
-        if (wobbleTimeline) wobbleTimeline.kill();
-
-        // Reset all transformations with elastic bounce
-        gsap.to(miniPlayerContainer, {
-          rotateX: 0, // Reset vertical rotation
-          rotateY: 0, // Reset horizontal rotation
-          scale: 1, // Reset scale
-          duration: 0.8, // Longer duration for natural rebound
-          ease: "elastic.out(1, 0.4)", // Enhanced elastic easing for bouncy effect
-        });
-      };
-
-      // Attach event listeners for interactive effects
-      miniPlayerContainer.addEventListener("mousemove", handleMouseMove);
-      miniPlayerContainer.addEventListener("mouseenter", handleMouseEnter);
-      miniPlayerContainer.addEventListener("mouseleave", handleMouseLeave);
-
-      // Cleanup - Remove event listeners on unmount to avoid memory leaks
-      return () => {
-        if (wobbleTimeline) wobbleTimeline.kill();
-        miniPlayerContainer.removeEventListener("mousemove", handleMouseMove);
-        miniPlayerContainer.removeEventListener("mouseenter", handleMouseEnter);
-        miniPlayerContainer.removeEventListener("mouseleave", handleMouseLeave);
-      };
-    },
-    { dependencies: [] } // Only run once on component mount
-  );
-
   // getVideoSrc - Constructs the video source path based on index
   const getVideoSrc = (index) => `/videos/hero-${index}.mp4`;
 
@@ -221,15 +122,8 @@ const Hero = () => {
       >
         {/* Video layering and interactive hotspot container */}
         <div>
-          {/* Circular masked hotspot that reveals the next video on hover */}
-          <div
-            ref={miniVideoPlayerContainerRef}
-            className="mask-clip-path absolute-center absolute z-50 size-40 md:size-64 cursor-pointer overflow-hidden rounded-lg"
-            style={{
-              transformStyle: "preserve-3d", // Enable 3D transforms
-              perspective: "1000px", // Add perspective for better 3D effect
-            }}
-          >
+          {/* VideoPreview component with tilt and parallax effects */}
+          <VideoPreview>
             {/* Scales in and fades on hover to preview upcoming video */}
             <div
               onClick={handleMiniVideoPlayerClick}
@@ -246,7 +140,7 @@ const Hero = () => {
                 onLoadedData={handleVideoLoad}
               />
             </div>
-          </div>
+          </VideoPreview>
 
           {/* Invisible preloaded video to smooth transitions */}
           <video
