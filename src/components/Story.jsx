@@ -1,6 +1,7 @@
 import gsap from "gsap";
 import { useRef } from "react";
 import AnimatedTitle from "./AnimatedTitle";
+import RoundedCorners from "./RoundedCorners";
 
 // Story - Renders the story section with an animated title and themed image
 const Story = () => {
@@ -86,6 +87,9 @@ const Story = () => {
                 />
               </div>
             </div>
+
+            {/* Rounded corners filter */}
+            <RoundedCorners />
           </div>
         </div>
       </div>
