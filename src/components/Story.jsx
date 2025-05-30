@@ -1,6 +1,7 @@
 import gsap from "gsap";
 import { useRef } from "react";
 import AnimatedTitle from "./AnimatedTitle";
+import Button from "./Button";
 import RoundedCorners from "./RoundedCorners";
 
 // Story - Renders the story section with an animated title and themed image
@@ -90,6 +91,25 @@ const Story = () => {
 
             {/* Rounded corners filter */}
             <RoundedCorners />
+          </div>
+        </div>
+
+        {/* Story hook container with text and button */}
+        <div className="-mt-80 flex w-full justify-center md:-mt-64 md:me-44 md:justify-end">
+          <div className="flex h-full w-fit flex-col items-center md:items-start">
+            {/* Narrative description text for the story hook */}
+            <p className="mt-3 max-w-sm text-center font-circular-web text-violet-50 md:text-start">
+              Where realms converge, lies Zentry and the boundless pillar.
+              Discover its secrets and shape your fate amidst infinite
+              opportunities.
+            </p>
+
+            {/* CTA button to lead into the story's prologue */}
+            <Button
+              id="realm-btn"
+              title="discover prologue"
+              containerClassName="mt-5"
+            />
           </div>
         </div>
       </div>
